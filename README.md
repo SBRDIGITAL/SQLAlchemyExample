@@ -22,24 +22,26 @@ SQLAlchemyExample/
    ├── config/
    │   ├── __init__.py           # Инициализация пакета config
    │   └── config_reader.py      # Чтение .env и создание env_config
-   ├── database/
-   │   ├── __init__.py           # Инициализация пакета database
-   │   ├── connection.py         # DbConnection (AsyncEngine + async_sessionmaker)
-   │   └── models.py             # Модели User / Product / Order + metadata_obj
    ├── dao/
    │   ├── __init__.py           # Инициализация пакета dao
    │   ├── base.py               # Базовый DAO с общими хелперами
    │   ├── user.py               # UserDAO
    │   ├── product.py            # ProductDAO
    │   └── order.py              # OrderDAO
-   ├── schemas/
-   │   ├── __init__.py           # Инициализация пакета schemas
-   │   ├── user.py               # NewUser / ExistsUser
-   │   ├── product.py            # NewProduct / ExistsProduct
-   │   └── order.py              # NewOrder / ExistsOrder
-   └── modules/
-      ├── __init__.py           # Инициализация вспомогательных модулей
-      └── logging/              # Модуль логирования (setup_logging, get_logger)
+   ├── database/
+   │   ├── __init__.py           # Инициализация пакета database
+   │   ├── connection.py         # DbConnection (AsyncEngine + async_sessionmaker)
+   │   └── models.py             # Модели User / Product / Order + metadata_obj
+   ├── modules/
+   │   ├── __init__.py           # Инициализация вспомогательных модулей
+   │   └── logging/
+   │       ├── __init__.py       # Публичный API модуля логирования
+   │       └── logger.py         # Настройка и функции логирования
+   └── schemas/
+      ├── __init__.py           # Инициализация пакета schemas
+      ├── user.py               # NewUser / ExistsUser
+      ├── product.py            # NewProduct / ExistsProduct
+      └── order.py              # NewOrder / ExistsOrder
 ```
 
 ## Установка и настройка
