@@ -11,6 +11,7 @@ python main.py
 from asyncio import run
 
 from app.config.config_reader import env_config
+
 from app.database.models import metadata_obj
 from app.database.connection import db_connection
 
