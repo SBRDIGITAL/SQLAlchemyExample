@@ -46,6 +46,7 @@ class ProductDAO(BaseDAO):
             .returning(self.model)
         )
         res = await session.execute(stmt)
+        await session.flush()
         obj = res.scalar_one()
         return ExistsProduct(**self._return_dict_from_obj(obj, self.model))
 
@@ -65,6 +66,44 @@ class ProductDAO(BaseDAO):
             ExistsProduct(**self._return_dict_from_obj(obj, self.model))
             for obj in objs
         ]
+
+    async def hide(self, product_id: int, session: AsyncSession) -> bool:
+        """
+        ## Скрывает товар (мягкое удаление).
+
+        Args:
+            product_id: ID товара.
+            session: Асинхронная сессия БД.
+
+        Returns:
+            bool: True, если товар найден и скрыт, False иначе.
+        """
+        query = select(self.model).where(self.model.id == product_id)
+        obj = await self._fetch_one(session, query)
+        if not obj:
+            return False
+        obj.is_hidden = True
+        await session.flush()
+        return True
+
+    async def unhide(self, product_id: int, session: AsyncSession) -> bool:
+        """
+        ## Восстанавливает скрытый товар.
+
+        Args:
+            product_id: ID товара.
+            session: Асинхронная сессия БД.
+
+        Returns:
+            bool: True, если товар найден и восстановлен, False иначе.
+        """
+        query = select(self.model).where(self.model.id == product_id)
+        obj = await self._fetch_one(session, query)
+        if not obj:
+            return False
+        obj.is_hidden = False
+        await session.flush()
+        return True
 
 
 

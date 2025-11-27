@@ -24,8 +24,10 @@ class ExistsProduct(NewProduct):
 
     Attributes:
         id (int): Первичный ключ товара в таблице.
+        is_hidden (bool): Флаг скрытия (мягкое удаление).
     """
     id: int
+    is_hidden: bool = False
 
 
 # Публичный API модуля

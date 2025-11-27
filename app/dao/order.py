@@ -43,6 +43,7 @@ class OrderDAO(BaseDAO):
             .returning(self.model)
         )
         res = await session.execute(stmt)
+        await session.flush()
         obj = res.scalar_one()
         return ExistsOrder(**self._return_dict_from_obj(obj, self.model))
 
@@ -66,6 +67,44 @@ class OrderDAO(BaseDAO):
             ExistsOrder(**self._return_dict_from_obj(obj, self.model))
             for obj in objs
         ]
+
+    async def hide(self, order_id: int, session: AsyncSession) -> bool:
+        """
+        ## Скрывает заказ (мягкое удаление).
+
+        Args:
+            order_id: ID заказа.
+            session: Асинхронная сессия БД.
+
+        Returns:
+            bool: True, если заказ найден и скрыт, False иначе.
+        """
+        query = select(self.model).where(self.model.id == order_id)
+        obj = await self._fetch_one(session, query)
+        if not obj:
+            return False
+        obj.is_hidden = True
+        await session.flush()
+        return True
+
+    async def unhide(self, order_id: int, session: AsyncSession) -> bool:
+        """
+        ## Восстанавливает скрытый заказ.
+
+        Args:
+            order_id: ID заказа.
+            session: Асинхронная сессия БД.
+
+        Returns:
+            bool: True, если заказ найден и восстановлен, False иначе.
+        """
+        query = select(self.model).where(self.model.id == order_id)
+        obj = await self._fetch_one(session, query)
+        if not obj:
+            return False
+        obj.is_hidden = False
+        await session.flush()
+        return True
 
 
 # Создание экземпляра DAO для заказов

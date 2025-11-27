@@ -31,8 +31,10 @@ class ExistsOrder(NewOrder):
 
     Attributes:
         id (int): Первичный ключ заказа в таблице.
+        is_hidden (bool): Флаг скрытия (мягкое удаление).
     """
     id: int
+    is_hidden: bool = False
 
 
 # Публичный API модуля

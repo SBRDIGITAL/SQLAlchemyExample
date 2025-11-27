@@ -26,17 +26,20 @@ SQLAlchemyExample/
     │   ├── __init__.py          # Инициализация пакета database
     │   ├── connection.py        # DbConnection (AsyncEngine + async_sessionmaker)
     │   └── models.py            # Модели User / Product / Order + metadata_obj
-    ├── dao/
+   ├── dao/
     │   ├── __init__.py          # Инициализация пакета dao
     │   ├── base.py              # Базовый DAO с общими хелперами
     │   ├── user.py              # UserDAO
     │   ├── product.py           # ProductDAO
     │   └── order.py             # OrderDAO
-    └── schemas/
-        ├── __init__.py          # Инициализация пакета schemas
-        ├── user.py              # NewUser / ExistsUser
-        ├── product.py           # NewProduct / ExistsProduct
-        └── order.py             # NewOrder / ExistsOrder
+   ├── schemas/
+   │   ├── __init__.py          # Инициализация пакета schemas
+   │   ├── user.py              # NewUser / ExistsUser
+   │   ├── product.py           # NewProduct / ExistsProduct
+   │   └── order.py             # NewOrder / ExistsOrder
+   └── modules/
+      ├── __init__.py          # Инициализация вспомогательных модулей
+      └── logging/             # Модуль логирования (setup_logging, get_logger)
 ```
 
 ## Установка и настройка
@@ -119,17 +122,25 @@ DB_ECHO=False
    - Докстринги и `Field` оформлены в стиле текущего проекта.
 
 5. `app/dao/*.py`
-   - `BaseDAO` хранит ссылку на `db_connection` и даёт общие хелперы:
-     `_return_dict_from_obj`, `_base_select`, `_fetch_one`, `_fetch_all`.
-   - Конкретные DAO (`UserDAO`, `ProductDAO`, `OrderDAO`) повторяют ваш паттерн:
-     в `__init__` задают `self.model`, методы принимают `AsyncSession` и
-     Pydantic-схемы.
+    - `BaseDAO` хранит ссылку на `db_connection` и даёт общие хелперы:
+       `_return_dict_from_obj`, `_base_select`, `_fetch_one`, `_fetch_all`.
+    - Конкретные DAO (`UserDAO`, `ProductDAO`, `OrderDAO`) задают `self.model` в `__init__`,
+       работают с Pydantic-схемами `New*` / `Exists*` и реализуют не только базовые операции
+       (`create`, выборка), но и мягкое удаление/восстановление через `hide()` / `unhide()`
+       (работа с полем `is_hidden`).
 
-6. `main.py`
-   - Читает `env_config`.
-   - Через `db_connection` и `metadata_obj` создаёт таблицы.
-   - Через DAO создаёт пользователя, товар и заказ.
-   - Читает заказы пользователя обратно из БД.
+6. `app/modules/logging`
+    - Содержит функции `setup_logging()` и `get_logger()`.
+    - Отвечает за централизованную настройку логирования и вывод логов в консоль.
+
+7. `main.py`
+    - Читает `env_config`.
+    - Через `db_connection` и `metadata_obj` создаёт таблицы.
+    - Настраивает логирование и логирует все шаги сценария.
+    - Через DAO создаёт нескольких пользователей, товары и заказы.
+    - Демонстрирует выборку (`get_by_email`, `get_all`, `get_by_user`).
+    - Демонстрирует мягкое удаление и восстановление (`hide` / `unhide`) для пользователей,
+       товаров и заказов, показывая, что связи и данные в БД не удаляются физически.
 
 ### Диаграмма потока данных
 
@@ -178,14 +189,21 @@ flowchart TD
 python main.py
 ```
 
-При успешном запуске в консоли вы увидите наподобие:
+При успешном запуске в консоли вы увидите подробные логи (уровень INFO)
+о создании таблиц, пользователей, товаров, заказов, а также о выполнении
+операций `hide` / `unhide`. Примерно в таком виде:
 
 ```text
-Подключаемся к БД: postgresql+asyncpg://...
-Создан пользователь: ExistsUser(...)
-Создан товар: ExistsProduct(...)
-Создан заказ: ExistsOrder(...)
-Все заказы пользователя: [ExistsOrder(...)]
+INFO - Запуск примера SQLAlchemy + DAO
+INFO - Подключаемся к БД: postgresql+asyncpg://...
+INFO - ✓ Таблицы созданы
+INFO - 1. Создание пользователей...
+INFO -    ✓ Создан: ExistsUser(id=..., email='alice@example.com', ...)
+...
+INFO - 9. Мягкое удаление товара...
+INFO -    ✓ Товар 'Мышь' скрыт: True
+INFO - 11. Проверка: заказы пользователя после скрытия товара...
+INFO -    ✓ Заказы Alice (...) шт. сохранились, несмотря на скрытие товара
 ```
 
 ## Лицензия
