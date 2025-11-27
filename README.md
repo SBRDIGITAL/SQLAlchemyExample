@@ -1,5 +1,11 @@
 # SQLAlchemyExample
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.x-red)
+![AsyncIO](https://img.shields.io/badge/async-asyncio%20%2B%20asyncpg-green)
+![Pydantic](https://img.shields.io/badge/pydantic-2.x-orange)
+
 Небольшой изолированный пример, показывающий, как в этом проекте
 выглядит связка:
 
