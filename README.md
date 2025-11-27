@@ -9,37 +9,37 @@
 
 ```
 SQLAlchemyExample/
-├── .env.template                # Пример переменных окружения
-├── .gitignore                   # Игнорируемые файлы Git
-├── .python-version              # Версия Python для проекта
-├── LICENSE                      # Лицензия
-├── README.md                    # Документация проекта
-├── pyproject.toml               # Конфигурация проекта (uv/pip)
-├── requirements.txt             # Зависимости Python
-├── main.py                      # Скрипт демонстрации работы
+├── .env.template                 # Пример переменных окружения
+├── .gitignore                    # Игнорируемые файлы Git
+├── .python-version               # Версия Python для проекта
+├── LICENSE                       # Лицензия
+├── README.md                     # Документация проекта
+├── pyproject.toml                # Конфигурация проекта (uv/pip)
+├── requirements.txt              # Зависимости Python
+├── main.py                       # Скрипт демонстрации работы
 └── app/
-    ├── __init__.py              # Инициализация пакета app
-    ├── config/
-    │   ├── __init__.py          # Инициализация пакета config
-    │   └── config_reader.py     # Чтение .env и создание env_config
-    ├── database/
-    │   ├── __init__.py          # Инициализация пакета database
-    │   ├── connection.py        # DbConnection (AsyncEngine + async_sessionmaker)
-    │   └── models.py            # Модели User / Product / Order + metadata_obj
+   ├── __init__.py               # Инициализация пакета app
+   ├── config/
+   │   ├── __init__.py           # Инициализация пакета config
+   │   └── config_reader.py      # Чтение .env и создание env_config
+   ├── database/
+   │   ├── __init__.py           # Инициализация пакета database
+   │   ├── connection.py         # DbConnection (AsyncEngine + async_sessionmaker)
+   │   └── models.py             # Модели User / Product / Order + metadata_obj
    ├── dao/
-    │   ├── __init__.py          # Инициализация пакета dao
-    │   ├── base.py              # Базовый DAO с общими хелперами
-    │   ├── user.py              # UserDAO
-    │   ├── product.py           # ProductDAO
-    │   └── order.py             # OrderDAO
+   │   ├── __init__.py           # Инициализация пакета dao
+   │   ├── base.py               # Базовый DAO с общими хелперами
+   │   ├── user.py               # UserDAO
+   │   ├── product.py            # ProductDAO
+   │   └── order.py              # OrderDAO
    ├── schemas/
-   │   ├── __init__.py          # Инициализация пакета schemas
-   │   ├── user.py              # NewUser / ExistsUser
-   │   ├── product.py           # NewProduct / ExistsProduct
-   │   └── order.py             # NewOrder / ExistsOrder
+   │   ├── __init__.py           # Инициализация пакета schemas
+   │   ├── user.py               # NewUser / ExistsUser
+   │   ├── product.py            # NewProduct / ExistsProduct
+   │   └── order.py              # NewOrder / ExistsOrder
    └── modules/
-      ├── __init__.py          # Инициализация вспомогательных модулей
-      └── logging/             # Модуль логирования (setup_logging, get_logger)
+      ├── __init__.py           # Инициализация вспомогательных модулей
+      └── logging/              # Модуль логирования (setup_logging, get_logger)
 ```
 
 ## Установка и настройка
